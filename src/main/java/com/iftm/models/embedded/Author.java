@@ -18,7 +18,7 @@ public class Author {
 	private String name;
 	
 	public Author(User entity) {
-		this.id = entity.getEmail();
+		this.id = entity.getId();
 		this.name = entity.getName();
 	}
 }
