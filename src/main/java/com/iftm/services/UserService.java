@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.iftm.models.dto.PostDTO;
 import com.iftm.models.dto.UserDTO;
 import com.iftm.models.entities.User;
 import com.iftm.repositories.UserRepository;
@@ -47,7 +48,13 @@ public class UserService {
 	}
 	
 	public void delete(String id) {
-		repository.deleteById(id);
+		User entity = getEntityById(id);
+		repository.delete(entity);
+	}
+	
+	public List<PostDTO> getUserPosts(String id) {
+		User entity = getEntityById(id);
+		return entity.getPosts().stream().map(x -> new PostDTO(x)).collect(Collectors.toList());
 	}
 	
 	private void copyDtoToEntity(UserDTO dto, User entity) {
