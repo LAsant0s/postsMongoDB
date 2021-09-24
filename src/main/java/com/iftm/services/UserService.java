@@ -23,11 +23,14 @@ public class UserService {
 		return list.stream().map(x -> new UserDTO(x)).collect(Collectors.toList());
 	}
 	
-	public UserDTO findById(String id) {
+	public User getEntityById(String id) {
 		Optional<User> result = repository.findById(id);
-		User entity = result.orElseThrow(() -> new ResourceNotFoundException("Recurso não encontrado"));
-		
-		return new UserDTO(entity);
+		return result.orElseThrow(() -> new ResourceNotFoundException("Recurso não encontrado"));
+	}
+	
+	public UserDTO findById(String id) {
+		User result = getEntityById(id);
+		return new UserDTO(result);
 	}
 	
 	public UserDTO insert(UserDTO dto) {
@@ -35,7 +38,14 @@ public class UserService {
 		copyDtoToEntity(dto, entity);
 		return new UserDTO(repository.insert(entity));
 	}
-
+	
+	public UserDTO update(String id, UserDTO dto) {
+		User entity = getEntityById(id);
+		copyDtoToEntity(dto, entity);
+		entity = repository.save(entity);
+		return new UserDTO(entity);
+	}
+	
 	private void copyDtoToEntity(UserDTO dto, User entity) {
 		entity.setName(dto.getName());
 		entity.setEmail(dto.getEmail());	
